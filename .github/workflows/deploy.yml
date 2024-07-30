@@ -39,6 +39,7 @@ jobs:
         run: |
           chmod +x ./terraform/scripts/upload_to_s3.sh
           chmod +x ./terraform/scripts/upload_resume.py
+          chmod +x ./terraform/empty_bucket.py
 
       - name: Install dependencies
         run: |
@@ -66,9 +67,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          cd terraform
-          python3 empty_bucket.py
+        run: python3 ./terraform/empty_bucket.py
 
       - name: Destroy Terraform
         if: ${{ failure() }}
