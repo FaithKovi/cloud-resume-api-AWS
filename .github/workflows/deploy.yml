@@ -33,13 +33,18 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
     
+      - name: Make scripts executable
+        run: |
+          chmod +x ./terraform/scripts/upload_to_s3.sh
+          chmod +x ./terraform/scripts/upload_resume.py
+
       - name: Decrypt tfvars file, Initialize and Deploy infrastructure with Terraform 
         run: |
           cd terraform
           gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output variables.tfvars variables.tfvars.gpg
           ls
           terraform init
-          terraform apply -auto-approve -var-file="terraform/variables.tfvars"
+          terraform apply -auto-approve -var-file="variables.tfvars"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
