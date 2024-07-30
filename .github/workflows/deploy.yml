@@ -12,6 +12,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
 
     steps:
       - name: Checkout code
@@ -37,7 +39,7 @@ jobs:
         run: |
           chmod +x ./terraform/scripts/upload_to_s3.sh
           chmod +x ./terraform/scripts/upload_resume.py
-          
+
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
@@ -47,7 +49,6 @@ jobs:
         run: |
           cd terraform
           gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output variables.tfvars variables.tfvars.gpg
-          ls
           terraform init
           terraform apply -auto-approve -var-file="variables.tfvars"
         env:
@@ -56,6 +57,23 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
 
+      - name: Check for failure
+        if: ${{ failure() }}
+        run: echo "A previous step failed. Proceeding to destroy infrastructure."
+
+      - name: Empty S3 bucket
+        if: ${{ failure() }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: python3 empty_bucket.py
+
+      - name: Destroy Terraform
+        if: ${{ failure() }}
+        run: terraform destroy -var-file=variables.tfvars -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
 
