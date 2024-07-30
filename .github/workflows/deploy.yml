@@ -37,6 +37,7 @@ jobs:
         run: |
           cd terraform
           gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output variables.tfvars variables.tfvars.gpg
+          ls
           terraform init
           terraform apply -auto-approve -var-file="terraform/variables.tfvars"
         env:
