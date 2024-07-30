@@ -37,6 +37,10 @@ jobs:
         run: |
           chmod +x ./terraform/scripts/upload_to_s3.sh
           chmod +x ./terraform/scripts/upload_resume.py
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install boto3
 
       - name: Decrypt tfvars file, Initialize and Deploy infrastructure with Terraform 
         run: |
