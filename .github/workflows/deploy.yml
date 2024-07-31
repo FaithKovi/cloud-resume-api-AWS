@@ -53,8 +53,8 @@ jobs:
         run: ./s3_backend.sh
 
       - name: Decrypt tfvars file, Initialize and Deploy infrastructure with Terraform 
+        working-directory: ./terraform
         run: |
-          working-directory: ./terraform
           gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output variables.tfvars variables.tfvars.gpg
           terraform init
           terraform apply -auto-approve -var-file="variables.tfvars"

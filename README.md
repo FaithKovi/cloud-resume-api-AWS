@@ -1,9 +1,6 @@
 # AWS RESUME API PROJECT
 [![Deploy](https://github.com/FaithKovi/cloud-resume-api-AWS/actions/workflows/deploy.yml/badge.svg)](https://github.com/FaithKovi/cloud-resume-api-AWS/actions/workflows/deploy.yml)
 
-URL:
-https://hrfvt0vr0f.execute-api.us-east-1.amazonaws.com/dev/resume/45fc47d4-4f3e-46e5-b9b8-357bba4ada68
-
 
 This project is about creating a serverless function that fetches resume data stored in a NoSQL Database and returns it in JSON format. 
 
