@@ -36,19 +36,25 @@ jobs:
         uses: hashicorp/setup-terraform@v3
     
       - name: Make scripts executable
+        working-directory: ./terraform
         run: |
-          chmod +x ./terraform/scripts/upload_to_s3.sh
-          chmod +x ./terraform/scripts/upload_resume.py
-          chmod +x ./terraform/empty_bucket.py
+          chmod +x ./scripts/upload_to_s3.sh
+          chmod +x ./scripts/upload_resume.py
+          chmod +x ./scripts/s3_backend.sh
+          chmod +x ./empty_bucket.py
 
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
           pip install boto3
+      
+      - name: Create s3 backend
+        working-directory: ./terraform/scripts
+        run: ./s3_backend.sh
 
       - name: Decrypt tfvars file, Initialize and Deploy infrastructure with Terraform 
         run: |
-          cd terraform
+          working-directory: ./terraform
           gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output variables.tfvars variables.tfvars.gpg
           terraform init
           terraform apply -auto-approve -var-file="variables.tfvars"
@@ -64,15 +70,16 @@ jobs:
 
       - name: Empty S3 bucket
         if: ${{ failure() }}
+        working-directory: ./terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: python3 ./terraform/empty_bucket.py
+        run: python3 empty_bucket.py
 
       - name: Destroy Terraform
         if: ${{ failure() }}
         run: |
-          cd terraform
+          working-directory: ./terraform
           terraform destroy -var-file=variables.tfvars -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
