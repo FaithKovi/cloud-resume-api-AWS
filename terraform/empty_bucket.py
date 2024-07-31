@@ -13,7 +13,7 @@ def empty_bucket(bucket_name):
     bucket.objects.all().delete()
 
 if __name__ == "__main__":
-    tfvars_file = 'variables.tfvars'
+    tfvars_file = './variables.tfvars'
     bucket_name = get_bucket_name(tfvars_file)
     print(f"Emptying bucket: {bucket_name}")
     empty_bucket(bucket_name)
