@@ -2,19 +2,22 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# create s3 bucket for terraform backend
-aws s3api create-bucket --bucket terraform-state-bucket1232444231 --region us-east-1 
+# Define variables
+BUCKET_NAME="terraform-state-bucket1232444231"
+TABLE_NAME="resume-terraform-locks"
+REGION="us-east-1"
 
-# create dynamodb table for state lock
+# Create S3 bucket for Terraform backend
+echo "Creating S3 bucket $BUCKET_NAME in region $REGION"
+aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION"
+
+# Create DynamoDB table for state lock
+echo "Creating DynamoDB table $TABLE_NAME in region $REGION"
 aws dynamodb create-table \
-    --table-name resume-terraform-locks \
+    --table-name "$TABLE_NAME" \
     --attribute-definitions AttributeName=LockID,AttributeType=S \
     --key-schema AttributeName=LockID,KeyType=HASH \
     --billing-mode PAY_PER_REQUEST \
-    --region us-east-1
+    --region "$REGION"
 
-
-exit 0
-
-
-
+echo "Resources created successfully."
