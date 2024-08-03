@@ -37,14 +37,14 @@ jobs:
           zip -r ../terraform/lambda_function.zip . -x "venv/*"
           echo "Lambda function zipped"
 
-      - name: Empty S3 bucket
+      - name: Empty S3 Bucket
+        working-directory: ./terraform
         run: |
-          aws s3 rm s3://$BUCKET_NAME --recursive
+          chmod +x ./scripts/empty_bucket.sh
+          ./scripts/empty_bucket.sh ${{ secrets.BUCKET_NAME }} ${{ secrets.AWS_REGION }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
 
       - name: Destroy Terraform
         working-directory: ./terraform
