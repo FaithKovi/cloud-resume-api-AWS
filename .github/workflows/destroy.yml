@@ -31,6 +31,12 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install boto3
 
+      - name: Package Lambda function 
+        run: |
+          cd lambda_function
+          zip -r ../terraform/lambda_function.zip . -x "venv/*"
+          echo "Lambda function zipped"
+
       - name: Empty S3 bucket
         run: |
           aws s3 rm s3://$BUCKET_NAME --recursive
