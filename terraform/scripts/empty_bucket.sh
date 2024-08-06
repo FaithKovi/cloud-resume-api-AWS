@@ -8,8 +8,8 @@ AWS_REGION="$2"
 
 # Check if the bucket exists
 if ! aws s3api head-bucket --bucket "$BUCKET_NAME" --region "$AWS_REGION" 2>/dev/null; then
-  echo "Error: Bucket $BUCKET_NAME does not exist in region $AWS_REGION."
-  exit 1
+  echo "Bucket $BUCKET_NAME does not exist in region $AWS_REGION."
+  exit 0
 fi
 
 echo "Deleting all objects and versions from bucket $BUCKET_NAME in region $AWS_REGION"
