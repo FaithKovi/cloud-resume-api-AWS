@@ -40,8 +40,6 @@ jobs:
         run: |
           chmod +x ./scripts/upload_to_s3.sh
           chmod +x ./scripts/upload_resume.py
-          chmod +x ./scripts/s3_backend.sh
-          chmod +x ./empty_bucket.py
 
       - name: Install dependencies
         run: |
@@ -49,14 +47,16 @@ jobs:
           pip install boto3
       
       - name: Create s3 backend
-        working-directory: ./terraform/scripts
-        run: ./s3_backend.sh
+        working-directory: ./terraform/modules/remote_state
+        run: |
+          terraform init
+          terraform apply -auto-approve
 
       - name: Decrypt tfvars file, Initialize and Plan Terraform
         working-directory: ./terraform
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output variables.tfvars variables.tfvars.gpg
-          terraform init
+          terraform init -reconfigure
           terraform plan -out=tfplan -var-file="variables.tfvars" -refresh-only
           terraform show -json tfplan | jq '.resource_changes | length'
         env:
