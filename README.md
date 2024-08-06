@@ -4,42 +4,38 @@
 
 This project is about creating a serverless function that fetches resume data stored in a NoSQL Database and returns it in JSON format. 
 
+## Objective
+The main objective is to create an API that can provide JSON-formatted resume data, and automate the deployment and infrastructure with Terraform 
+
 
 ## Stack
-- Serverless Function: AWS Lambda
-- API: API gateway
-- Infrastructure as Code: Terraform 
-- CI/CD: Github Actions
-- MoSQL database: DynamoDB
+- <b>Serverless Function:</b> AWS Lambda
+- <b>API:</b> API gateway
+- <b>Infrastructure as Code:</b> Terraform 
+- <b>CI/CD:<b> Github Actions
+- <b>NoSQL database:</b> DynamoDB
 
-## Installations
-###### Install the following locally to run this project:
+## Set Up
+### Installation 
 - Python
 - Terraform
 - AWS CLI (Set up your AWS profile)
 
-## Run Locally
+
 ### Upload resume
-Upload your resume in `json` format to the `terraform` folder
 
-### Make the scripts executable
-###### The local deployment script
-```
-$ chmod +x ./start.sh
-```
-###### The scripts in the infrastructure
-```
-$ cd terraform/scripts
-$ chmod +x ./upload_resume.py
-$ chmod +x ./upload_to_s3.sh
-```
+<p>Upload your resume in `json` format to the `terraform` folder</p>
 
-###### Run the start script
-```
-$ ./start.sh
+### Add Secrets
+<p>Add the following Action secrets to your repository:</p>
 
-```
-###### What does the above script do?
-- Zips function folder
-- Deploy infrastructure with Terraform (which also includes uploading the resume to dynamodb and uploading the function to AWS Lambda)
+- AWS_REGION
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- BUCKET_NAME
+- SECRET_PASSPHRASE
+
+
+
+
 
