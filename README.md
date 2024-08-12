@@ -12,19 +12,29 @@ The main objective is to create an API that can provide JSON-formatted resume da
 - <b>Serverless Function:</b> AWS Lambda
 - <b>API:</b> API gateway
 - <b>Infrastructure as Code:</b> Terraform 
-- <b>CI/CD:<b> Github Actions
+- <b>CI/CD:</b> Github Actions 
 - <b>NoSQL database:</b> DynamoDB
+
 
 ## Set Up
 ### Installation 
 - Python
 - Terraform
 - AWS CLI (Set up your AWS profile)
+- Install [gpg](https://gnupg.org/) and create passphrase
 
 
 ### Upload resume
 
 <p>Upload your resume in `json` format to the `terraform` folder</p>
+
+### Variables encryption
+<p>Encrypt the <b>variables.tfvars</b> file with Symmetric encryption using gpg.</p>
+Run this command;
+
+```
+$ gpg --symmetric variables.tfvars
+```
 
 ### Add Secrets
 <p>Add the following Action secrets to your repository:</p>
